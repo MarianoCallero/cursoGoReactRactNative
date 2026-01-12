@@ -4,10 +4,13 @@ import (
 	"net/http"
 	"time"
 
-	"gateway/internal/handlers"
-
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+
+	"gateway/internal/auth"
+	health "gateway/internal/handlers/health"
+	hello "gateway/internal/handlers/hello"
+	login "gateway/internal/handlers/login"
 )
 
 type Server struct {
@@ -21,20 +24,25 @@ func New(addr string) *Server {
 func (s *Server) Start() error {
 	r := chi.NewRouter()
 
-	// Middlewares básicos (production-friendly)
+	// Middlewares 
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-
-	// CORS simple (para front React en dev). Ajustá origins si querés.
 	r.Use(corsMiddleware)
 
-	// Routes
-	r.Get("/health", handlers.Health)
+	// Public routes
+	r.Get("/health", health.Health)
 
 	r.Route("/api/v1", func(r chi.Router) {
-		r.Get("/hello", handlers.Hello)
+		// Public routes v1
+		r.Post("/login", login.Login)
+
+		// Protected routes v1
+		r.Group(func(r chi.Router) {
+			r.Use(auth.Middleware) // primero middleware del grupo
+			r.Get("/hello", hello.Hello)
+		})
 	})
 
 	httpServer := &http.Server{
@@ -49,7 +57,7 @@ func (s *Server) Start() error {
 	return httpServer.ListenAndServe()
 }
 
-// CORS mínimo sin librerías extra
+// CORS
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
