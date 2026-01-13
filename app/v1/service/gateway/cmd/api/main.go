@@ -3,9 +3,21 @@ package main
 import (
 	"log"
 	"os"
-
+	_"gateway/docs"
 	"gateway/internal/server"
 )
+
+
+// @title Gateway API
+// @version 1.0
+// @description API del gateway
+// @host localhost:8080
+// @BasePath /
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+
 
 func main() {
 	port := os.Getenv("PORT")

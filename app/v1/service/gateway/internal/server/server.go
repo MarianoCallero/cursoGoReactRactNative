@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	httpSwagger "github.com/swaggo/http-swagger"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
@@ -33,6 +35,8 @@ func (s *Server) Start() error {
 
 	// Public routes
 	r.Get("/health", health.Health)
+	// Swagger route
+	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 	r.Route("/api/v1", func(r chi.Router) {
 		// Public routes v1
@@ -44,6 +48,8 @@ func (s *Server) Start() error {
 			r.Get("/hello", hello.Hello)
 		})
 	})
+
+
 
 	httpServer := &http.Server{
 		Addr:              s.addr,

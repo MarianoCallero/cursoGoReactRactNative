@@ -12,6 +12,18 @@ type LoginRequest struct {
 	Pass string `json:"pass"`
 }
 
+
+// Login godoc
+// @Summary Login
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param body body LoginRequest true "credentials"
+// @Success 200 {object} map[string]string
+// @Failure 400 {string} string
+// @Failure 401 {string} string
+// @Router /api/v1/login [post]
+
 func Login(w http.ResponseWriter, r *http.Request) {
 	var req LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
