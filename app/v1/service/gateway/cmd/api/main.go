@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-	_"gateway/docs"
+	
 	"gateway/internal/server"
 )
 

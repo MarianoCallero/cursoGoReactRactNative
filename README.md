@@ -1,5 +1,3 @@
-Podés copiar y pegar tal cual.
-
 # Gateway App — Go + React + TypeScript
 
 Aplicación web full-stack compuesta por:

@@ -4,10 +4,9 @@ import (
 	"net/http"
 	"time"
 
-	httpSwagger "github.com/swaggo/http-swagger"
-
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 
 	"gateway/internal/auth"
 	health "gateway/internal/handlers/health"
@@ -36,7 +35,13 @@ func (s *Server) Start() error {
 	// Public routes
 	r.Get("/health", health.Health)
 	// Swagger route
-	r.Get("/swagger/*", httpSwagger.WrapHandler)
+	r.Get("/openapi.yaml", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "openapi/swagger.yaml")
+	})
+
+	r.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("/openapi.yaml"),
+	))
 
 	r.Route("/api/v1", func(r chi.Router) {
 		// Public routes v1
