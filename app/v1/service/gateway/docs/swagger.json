@@ -8,12 +8,5 @@
     },
     "host": "localhost:8080",
     "basePath": "/",
-    "paths": {},
-    "securityDefinitions": {
-        "BearerAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
-        }
-    }
+    "paths": {}
 }
