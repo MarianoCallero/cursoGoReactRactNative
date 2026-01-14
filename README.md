@@ -170,16 +170,3 @@ AbortController para evitar memory leaks
 
 Validación de respuesta JSON
 
-## Buenas prácticas aplicadas
-
-API versionada (/api/v1)
-
-Separación clara de responsabilidades
-
-Uso de internal/ en Go
-
-Timeouts en el servidor HTTP
-
-CORS controlado
-
-Código simple y legible
