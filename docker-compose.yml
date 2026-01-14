@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./app/v1/service/gateway
+      dockerfile: Dockerfile
+    container_name: gateway-backend
+    environment:
+      PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - appnet
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ./app/v1/web/gestion-hotel
+      dockerfile: Dockerfile
+    container_name: gateway-web
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "5173:80"
+    networks:
+      - appnet
+    restart: unless-stopped
+
+networks:
+  appnet:
+    driver: bridge

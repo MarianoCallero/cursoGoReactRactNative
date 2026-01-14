@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Gateway API
+  description: API del gateway (health, login, hello)
+  version: "1.0.0"
+
+
+servers:
+  - url: http://localhost:8080
+
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Estado del servicio
+      tags:
+        - system
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+
+  /api/v1/login:
+    post:
+      summary: Login
+      description: Devuelve un token JWT
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user
+                - pass
+              properties:
+                user:
+                  type: string
+                  example: admin
+                pass:
+                  type: string
+                  example: "1234"
+      responses:
+        "200":
+          description: Token generado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "401":
+          description: Credenciales inválidas
+
+
+  /api/v1/hello:
+    get:
+      summary: Hello
+      description: Endpoint protegido
+      tags:
+        - api
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hola desde Go
+
+
+
